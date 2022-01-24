@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  node:
+    build: ./docker/node
+    container_name: ro-kee-backend-node
+    tty: true
+    volumes:
+      - .:/backend
+#      - ./node_modules:/backend/node_modules
+    ports:
+      - "3000:3000"
+  psql:
+    image: postgres:13
+    container_name: ro-kee-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ro-kee
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - db_psql_data:/var/lib/postgresql
+  redis:
+    container_name: ro-kee-redis
+    image: redis:6
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
+
+volumes:
+  redis:
+    driver: local
+  db_psql_data:
+    driver: local
